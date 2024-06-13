@@ -44,39 +44,3 @@ class Camera:
             self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateY(-self.rotate_speed)))
         elif direction == 'ROTATE_Y_RIGHT':
             self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateY(self.rotate_speed)))
-
-    def TransferToCameraSpace(self, vertices):
-        m1 = numpy.array([
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [-self.position[0], -self.position[1], -self.position[2], 1]
-        ])
-        m2 = numpy.array([
-            [self.right[0], self.up[0], self.forward[0], 0],
-            [self.right[1], self.up[1], self.forward[1], 0],
-            [self.right[2], self.up[2], self.forward[2], 0],
-            [0, 0, 0, 1]
-        ])
-        return vertices @ (m1 @ m2)
-
-    def ProjectionCameraSpace(self, vertices):
-        NEAR   = self.near_plane
-        FAR    = self.far_plane
-        RIGHT  = tan(self.h_fov / 2)
-        LEFT   = -RIGHT
-        TOP    = tan(self.v_fov / 2)
-        BOTTOM = -TOP
-
-        m00 = 2 / (RIGHT - LEFT)
-        m11 = 2 / (TOP - BOTTOM)
-        m22 = (FAR + NEAR) / (FAR - NEAR)
-        m32 = -2 * NEAR * FAR / (FAR - NEAR)
-        m = numpy.array([
-            [m00, 0, 0, 0],
-            [0, m11, 0, 0],
-            [0, 0, m22, 1],
-            [0, 0, m32, 0]
-        ])
-
-        return vertices @ m

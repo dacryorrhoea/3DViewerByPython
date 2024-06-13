@@ -17,9 +17,7 @@ class Engine:
         # проецирование сцены
         self.viewport.ClearViewport()
         for mesh in self.scene:
-            vertices = self.camera.TransferToCameraSpace(mesh.vertices)
-            vertices = self.camera.ProjectionCameraSpace(vertices)
-            self.viewport.ProjectionToViewport(vertices, mesh.faces)
+            self.viewport.ProjectionToViewport(mesh, self.camera)
         
         # отрисовка на экране
         screen.fill(BLACK)

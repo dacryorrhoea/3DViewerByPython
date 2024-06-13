@@ -28,5 +28,4 @@ class Mesh:
 
     def Scale(self, s):
         M = numpy.array(Matrices.MatrixScale(s))
-
         self.vertices = self.vertices @ M
