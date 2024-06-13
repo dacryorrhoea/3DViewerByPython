@@ -1,5 +1,6 @@
 import numpy
 from math import *
+from matrices import *
 
 class Camera:
     def __init__(self):
@@ -17,6 +18,11 @@ class Camera:
         self.move_speed = 1.0
         self.rotate_speed = 0.01
 
+    def CameraChangeDirection(self, matrix_rotate):
+        self.forward = self.forward @ matrix_rotate
+        self.up = self.up @ matrix_rotate
+        self.right = self.right @ matrix_rotate
+
     def CameraMoving(self, direction): 
         if   direction == 'RIGHT':
             self.position += self.right * self.move_speed
@@ -26,52 +32,18 @@ class Camera:
             self.position += self.up * self.move_speed
         elif direction == 'DOWN':
             self.position -= self.up * self.move_speed
-        elif direction == 'FORWARD':
-            self.position -= self.forward * self.move_speed
         elif direction == 'BACKWARD':
             self.position += self.forward * self.move_speed
+        elif direction == 'FORWARD':
+            self.position -= self.forward * self.move_speed
         elif direction == "ROTATE_X_LEFT":
-            Matr = numpy.array([
-                [1,      0,       0, 0],
-                [0, cos(-self.rotate_speed), -sin(-self.rotate_speed), 0],
-                [0, sin(-self.rotate_speed),  cos(-self.rotate_speed), 0],
-                [0,      0,       0, 1]
-            ])
-            self.forward = self.forward @ Matr
-            self.up = self.up @ Matr
-            self.right = self.right @ Matr
+            self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateX(-self.rotate_speed)))
         elif direction == "ROTATE_X_RIGHT":
-            Matr = numpy.array([
-                [1,      0,       0, 0],
-                [0, cos(self.rotate_speed), -sin(self.rotate_speed), 0],
-                [0, sin(self.rotate_speed),  cos(self.rotate_speed), 0],
-                [0,      0,       0, 1]
-            ])
-            self.forward = self.forward @ Matr
-            self.up = self.up @ Matr
-            self.right = self.right @ Matr
+            self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateX(self.rotate_speed)))
         elif direction == 'ROTATE_Y_LEFT':
-            Matr = numpy.array([
-                [ cos(-self.rotate_speed), 0, sin(-self.rotate_speed), 0],
-                [      0, 1,      0, 0],
-                [-sin(-self.rotate_speed), 0, cos(-self.rotate_speed), 0],
-                [      0, 0,      0, 1]
-            ])
-            self.forward = self.forward @ Matr
-            self.up = self.up @ Matr
-            self.right = self.right @ Matr
+            self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateY(-self.rotate_speed)))
         elif direction == 'ROTATE_Y_RIGHT':
-            Matr = numpy.array([
-                [ cos(self.rotate_speed), 0, sin(self.rotate_speed), 0],
-                [      0, 1,      0, 0],
-                [-sin(self.rotate_speed), 0, cos(self.rotate_speed), 0],
-                [      0, 0,      0, 1]
-            ])
-            self.forward = self.forward @ Matr
-            self.up = self.up @ Matr
-            self.right = self.right @ Matr
-        
-        print(f'{self.position, self.forward, self.up, self.right}')
+            self.CameraChangeDirection(numpy.array(Matrices.MatrixRotateY(self.rotate_speed)))
 
     def TransferToCameraSpace(self, vertices):
         m1 = numpy.array([
